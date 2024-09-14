@@ -1,5 +1,5 @@
 name: Release Storages
- 
+
 on:
   release:
     types: [published]
@@ -12,20 +12,18 @@ jobs:
   publish-npm:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org/
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
       - run: npm i -g pnpm
-      - name: setup npmrc
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-      - name: setup pnpm config
-        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
-      - run: pnpm install 
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: pnpm config set store-dir $PNPM_CACHE_FOLDER
       - run: pnpm run build
       - run: pnpm run test
       - name: create and publish versions

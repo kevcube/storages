@@ -1,5 +1,5 @@
-import { Bot, Context, session, SessionFlavor } from "grammy";
-import { PsqlAdapter } from '@grammyjs/storage-psql';
+import { Bot, type Context, session, type SessionFlavor } from "grammy";
+import { PsqlAdapter } from '@grammyjs/storage-drizzle-neon';
 import { Client } from "pg";
 
 interface SessionData {
